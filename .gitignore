@@ -1,0 +1,14 @@
+/node_modules
+.env
+
+# exclude everything
+src/images/*
+
+# exception to the rule
+!src/images/.gitkeep 
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+.DS_Store

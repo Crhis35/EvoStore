@@ -1,0 +1,9 @@
+type User {
+  name: String!
+  lastName: String!
+  pictureUrl: String
+}
+
+type Query {
+  currentUser: User @auth(requires: USER)
+}

@@ -1,0 +1,9 @@
+schema: ./src/**/*.graphql
+generates:
+  ./src/graphql-codegen-types.ts:
+    plugins:
+      - typescript:
+          constEnums: true
+      - typescript-resolvers:
+          useIndexSignature: true
+          contextType: '@graphql-modules/core#ModuleContext'
