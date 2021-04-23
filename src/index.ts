@@ -1,3 +1,11 @@
+declare global {
+  namespace GraphQLModules {
+    interface GlobalContext {
+      request: any;
+      response: any;
+    }
+  }
+}
 import 'reflect-metadata';
 import { environment } from './environment';
 import { graphqlUploadExpress } from 'graphql-upload';
@@ -6,6 +14,7 @@ import express from 'express';
 import * as http from 'http';
 import { ApolloServer, PubSub } from 'apollo-server-express';
 import Consola from 'consola';
+import jwt from 'express-jwt';
 import { join } from 'path';
 import { application } from './application';
 
@@ -28,26 +37,7 @@ const server = new ApolloServer({
   subscriptions: {
     path: '/subscriptions',
   },
-  context: async ({ req }) => {
-    let authToken = null;
-    let currentUser = null;
-    console.log(req.headers);
-    try {
-      authToken = req.headers[HEADER_NAME];
-
-      if (authToken) {
-        // currentUser = await tradeTokenForUser(authToken);
-        currentUser = true;
-      }
-    } catch (e) {
-      console.warn(`Unable to authenticate using auth token: ${authToken}`);
-    }
-
-    return {
-      authToken,
-      currentUser,
-    };
-  },
+  context: ({ req, res }) => ({ request: req, response: res }),
 });
 
 const startApp = async () => {
@@ -58,6 +48,7 @@ const startApp = async () => {
       useFindAndModify: false,
       useUnifiedTopology: true,
     });
+
     Consola.success({
       badge: true,
       message: `Successfully connected with the database`,

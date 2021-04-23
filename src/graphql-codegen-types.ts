@@ -1,5 +1,4 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-import { ModuleContext } from '@graphql-modules/core';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
@@ -14,8 +13,8 @@ export type Scalars = {
   Float: number;
   Date: any;
   Email: any;
+  Upload: any;
 };
-
 
 export type AuthAndToken = {
   __typename?: 'AuthAndToken';
@@ -27,6 +26,7 @@ export type AuthProvider = {
   __typename?: 'AuthProvider';
   id: Scalars['ID'];
   email: Scalars['Email'];
+  userName?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
   provider: Provider;
   verifiedCode?: Maybe<Scalars['Int']>;
@@ -38,12 +38,30 @@ export type AuthProvider = {
 };
 
 export type AuthProviderInput = {
+  userName: Scalars['String'];
   email: Scalars['Email'];
   password?: Maybe<Scalars['String']>;
   provider: Provider;
 };
 
 
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  _?: Maybe<Scalars['String']>;
+  imageUploader: Scalars['String'];
+  signUp?: Maybe<AuthAndToken>;
+};
+
+
+export type MutationImageUploaderArgs = {
+  file: Scalars['Upload'];
+};
+
+
+export type MutationSignUpArgs = {
+  input: AuthProviderInput;
+};
 
 export const enum Provider {
   Email = 'Email',
@@ -52,9 +70,9 @@ export const enum Provider {
 
 export type Query = {
   __typename?: 'Query';
+  _?: Maybe<Scalars['String']>;
   currentUser?: Maybe<User>;
   login?: Maybe<AuthAndToken>;
-  signUp?: Maybe<AuthAndToken>;
 };
 
 
@@ -62,16 +80,17 @@ export type QueryLoginArgs = {
   input: LoginInput;
 };
 
-
-export type QuerySignUpArgs = {
-  input: AuthProviderInput;
-};
-
 export const enum Role {
   Admin = 'ADMIN',
   Owner = 'OWNER',
   User = 'USER'
 };
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  _?: Maybe<Scalars['String']>;
+};
+
 
 export type User = {
   __typename?: 'User';
@@ -173,9 +192,12 @@ export type ResolversTypes = ResolversObject<{
   AuthProviderInput: AuthProviderInput;
   Date: ResolverTypeWrapper<Scalars['Date']>;
   Email: ResolverTypeWrapper<Scalars['Email']>;
+  Mutation: ResolverTypeWrapper<{}>;
   Provider: Provider;
   Query: ResolverTypeWrapper<{}>;
   Role: Role;
+  Subscription: ResolverTypeWrapper<{}>;
+  Upload: ResolverTypeWrapper<Scalars['Upload']>;
   User: ResolverTypeWrapper<User>;
   loginInput: LoginInput;
 }>;
@@ -191,24 +213,24 @@ export type ResolversParentTypes = ResolversObject<{
   AuthProviderInput: AuthProviderInput;
   Date: Scalars['Date'];
   Email: Scalars['Email'];
+  Mutation: {};
   Query: {};
+  Subscription: {};
+  Upload: Scalars['Upload'];
   User: User;
   loginInput: LoginInput;
 }>;
 
-export type AuthDirectiveArgs = {   requires: Role; };
-
-export type AuthDirectiveResolver<Result, Parent, ContextType = ModuleContext, Args = AuthDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export type AuthAndTokenResolvers<ContextType = ModuleContext, ParentType extends ResolversParentTypes['AuthAndToken'] = ResolversParentTypes['AuthAndToken']> = ResolversObject<{
+export type AuthAndTokenResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthAndToken'] = ResolversParentTypes['AuthAndToken']> = ResolversObject<{
   token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   auth?: Resolver<ResolversTypes['AuthProvider'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type AuthProviderResolvers<ContextType = ModuleContext, ParentType extends ResolversParentTypes['AuthProvider'] = ResolversParentTypes['AuthProvider']> = ResolversObject<{
+export type AuthProviderResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthProvider'] = ResolversParentTypes['AuthProvider']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['Email'], ParentType, ContextType>;
+  userName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   password?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   provider?: Resolver<ResolversTypes['Provider'], ParentType, ContextType>;
   verifiedCode?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -228,25 +250,42 @@ export interface EmailScalarConfig extends GraphQLScalarTypeConfig<ResolversType
   name: 'Email';
 }
 
-export type QueryResolvers<ContextType = ModuleContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  login?: Resolver<Maybe<ResolversTypes['AuthAndToken']>, ParentType, ContextType, RequireFields<QueryLoginArgs, 'input'>>;
-  signUp?: Resolver<Maybe<ResolversTypes['AuthAndToken']>, ParentType, ContextType, RequireFields<QuerySignUpArgs, 'input'>>;
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  _?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  imageUploader?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationImageUploaderArgs, 'file'>>;
+  signUp?: Resolver<Maybe<ResolversTypes['AuthAndToken']>, ParentType, ContextType, RequireFields<MutationSignUpArgs, 'input'>>;
 }>;
 
-export type UserResolvers<ContextType = ModuleContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
+export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  _?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  login?: Resolver<Maybe<ResolversTypes['AuthAndToken']>, ParentType, ContextType, RequireFields<QueryLoginArgs, 'input'>>;
+}>;
+
+export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
+  _?: SubscriptionResolver<Maybe<ResolversTypes['String']>, "_", ParentType, ContextType>;
+}>;
+
+export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
+  name: 'Upload';
+}
+
+export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   pictureUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type Resolvers<ContextType = ModuleContext> = ResolversObject<{
+export type Resolvers<ContextType = any> = ResolversObject<{
   AuthAndToken?: AuthAndTokenResolvers<ContextType>;
   AuthProvider?: AuthProviderResolvers<ContextType>;
   Date?: GraphQLScalarType;
   Email?: GraphQLScalarType;
+  Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Subscription?: SubscriptionResolvers<ContextType>;
+  Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
 }>;
 
@@ -255,14 +294,4 @@ export type Resolvers<ContextType = ModuleContext> = ResolversObject<{
  * @deprecated
  * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
  */
-export type IResolvers<ContextType = ModuleContext> = Resolvers<ContextType>;
-export type DirectiveResolvers<ContextType = ModuleContext> = ResolversObject<{
-  auth?: AuthDirectiveResolver<any, any, ContextType>;
-}>;
-
-
-/**
- * @deprecated
- * Use "DirectiveResolvers" root object instead. If you wish to get "IDirectiveResolvers", add "typesPrefix: I" to your config.
- */
-export type IDirectiveResolvers<ContextType = ModuleContext> = DirectiveResolvers<ContextType>;
+export type IResolvers<ContextType = any> = Resolvers<ContextType>;

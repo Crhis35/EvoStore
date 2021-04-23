@@ -1,8 +1,3 @@
-scalar Email
-scalar Date
-
-directive @auth(requires: Role!) on FIELD_DEFINITION
-
 enum Role {
   ADMIN
   OWNER
@@ -16,6 +11,7 @@ enum Provider {
 type AuthProvider {
   id: ID!
   email: Email!
+  userName: String
   password: String
   provider: Provider!
   verifiedCode: Int
@@ -32,6 +28,7 @@ input loginInput {
 }
 
 input AuthProviderInput {
+  userName: String!
   email: Email!
   password: String
   provider: Provider!
@@ -42,7 +39,10 @@ type AuthAndToken {
   auth: AuthProvider!
 }
 
-type Query {
-  signUp(input: AuthProviderInput!): AuthAndToken
+extend type Query {
   login(input: loginInput!): AuthAndToken
+}
+
+extend type Mutation {
+  signUp(input: AuthProviderInput!): AuthAndToken
 }

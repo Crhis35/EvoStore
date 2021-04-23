@@ -9,6 +9,7 @@ const users = [
 
 @Injectable()
 export class Users {
+  constructor() {}
   getUser(id: number) {
     return users.find(({ _id }) => _id === id);
   }

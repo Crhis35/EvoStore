@@ -4,6 +4,6 @@ type User {
   pictureUrl: String
 }
 
-type Query {
-  currentUser: User @auth(requires: USER)
+extend type Query {
+  currentUser: User
 }

@@ -1,0 +1,13 @@
+scalar Email
+scalar Date
+scalar Upload
+type Query {
+  _: String
+}
+type Mutation {
+  _: String
+  imageUploader(file: Upload!): String!
+}
+type Subscription {
+  _: String
+}
