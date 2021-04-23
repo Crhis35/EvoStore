@@ -9,6 +9,7 @@ import jwt from 'jsonwebtoken';
 
 import { typeDefs } from './type-defs';
 import { resolvers } from './resolvers';
+import { Auth } from './providers';
 
 interface AuthenticatedUser {
   _id: number;
@@ -27,6 +28,7 @@ export const AuthModule = createModule({
   typeDefs,
   resolvers,
   providers: [
+    Auth,
     {
       provide: AuthenticatedUser,
       scope: Scope.Operation,
