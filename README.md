@@ -1,7 +1,4 @@
-# EvoStore
-
-
-# EvoStore REST API Docs
+# EvoStore API Docs
 
 ## Configurations
 
