@@ -2,11 +2,14 @@ import { Injectable } from 'graphql-modules';
 import jwt from 'jsonwebtoken';
 
 import { environment } from '../../../environment';
-import { MutationSignUpArgs } from '../../../graphql-codegen-types';
+import { LoginInput, MutationSignUpArgs } from '../../../graphql-codegen-types';
 import Email from '../../../service/email';
+import { AppError } from '../../../utils';
 import AuthProvider, { IAuthProvider } from '../models';
 
-@Injectable()
+@Injectable({
+  global: true,
+})
 export class Auth {
   async signUp(input: MutationSignUpArgs, request: any, response: any) {
     const auth = await AuthProvider.create(input);
@@ -21,6 +24,10 @@ export class Auth {
     return jwt.sign({ id: id }, environment.jwtSecret, {
       expiresIn: environment.jwtExpires,
     });
+  }
+
+  async update(id: string, userId: string) {
+    await AuthProvider.findByIdAndUpdate(id, { userId });
   }
 
   private createSendToken = (auth: IAuthProvider, res: any) => {
@@ -41,4 +48,11 @@ export class Auth {
       auth,
     };
   };
+  async login({ email, password }: LoginInput, response: any) {
+    const user = await AuthProvider.findOne({ email }).select('+password');
+    if (!user || !(await user.correctPassword(password, user.password)))
+      return new AppError('Incorrect email or password', '401');
+
+    if (user) return this.createSendToken(user, response);
+  }
 }

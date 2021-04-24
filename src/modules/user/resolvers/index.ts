@@ -1,7 +1,4 @@
-import query from './query';
-import user from './user';
+// import { query } from './query';
+import { mutation } from './mutation';
 
-export default {
-  ...query,
-  ...user,
-};
+export const resolvers = { Mutation: mutation };

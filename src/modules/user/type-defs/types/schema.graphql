@@ -7,3 +7,13 @@ type User {
 extend type Query {
   currentUser: User
 }
+
+input UserInput {
+  name: String!
+  lastName: String!
+  pictureUrl: String
+}
+
+extend type Mutation {
+  createUser(input: UserInput!): User
+}

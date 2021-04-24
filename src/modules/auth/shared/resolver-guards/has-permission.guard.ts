@@ -1,10 +1,6 @@
 import { ForbiddenError } from 'apollo-server-express';
+import { AuthenticatedUser } from '../../auth.module';
 
-import { AuthProvider } from '../../providers/auth.provider';
-/**
- * Validate if current user has permission to proceed with the request.
- * @param permissions - List of permissions to validate.
- */
 export const hasPermission = (permissions: string[]): any => (
   next: any
 ): any => async (
@@ -13,7 +9,7 @@ export const hasPermission = (permissions: string[]): any => (
   context: any,
   info: any
 ): Promise<any> => {
-  if (!context.injector.get(AuthProvider).hasPermission(permissions)) {
+  if (!context.injector.get(AuthenticatedUser).hasPermission(permissions)) {
     throw new ForbiddenError('Permissions required. ');
   }
 

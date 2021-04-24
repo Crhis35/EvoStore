@@ -11,6 +11,9 @@ export interface IAuthProvider extends Document {
   verified: Boolean;
   userId: string;
   role: string;
+  passwordChangedAt: number;
+  passwordResetExpires: number;
+  correctPassword: Function;
 }
 
 const authSchema = new Schema(
@@ -42,20 +45,43 @@ const authSchema = new Schema(
       type: SchemaTypes.Boolean,
       default: false,
     },
-    userId: [
-      {
-        type: SchemaTypes.ObjectId,
-        ref: 'User',
-      },
-    ],
+    userId: {
+      type: SchemaTypes.ObjectId,
+      ref: 'User',
+    },
     role: {
       type: SchemaTypes.String,
       enum: ['User', 'Owner', 'admin'],
       default: 'User',
     },
+    passwordChangedAt: SchemaTypes.Date,
+    passwordResetExpires: SchemaTypes.Date,
   },
   { timestamps: true }
 );
+
+authSchema.pre<IAuthProvider>(/^find/, function (next) {
+  this.populate('userId');
+  //   .populate({
+  //   path: 'user',
+  //   select: 'name',
+  // });
+  next();
+});
+
+authSchema.pre<IAuthProvider>('save', function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
+  this.passwordChangedAt = Date.now() - 1000;
+  next();
+});
+
+authSchema.methods.correctPassword = async function (
+  candidatePassword,
+  userPassword
+) {
+  return await bycript.compare(candidatePassword, userPassword);
+};
+
 authSchema.pre<IAuthProvider>('save', async function (next) {
   // Only run this function if password was actually modified
   if (!this.isModified('password')) return next();
@@ -66,6 +92,7 @@ authSchema.pre<IAuthProvider>('save', async function (next) {
 
   next();
 });
+
 authSchema.method('toClient', function () {
   const obj = this.toObject();
 

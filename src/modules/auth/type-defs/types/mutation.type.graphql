@@ -18,6 +18,8 @@ type AuthProvider {
   verified: Boolean!
   userId: User
   role: Role!
+  passwordChangedAt: Date
+  passwordResetExpires: Date
   createdAt: Date
   updateAt: Date
 }

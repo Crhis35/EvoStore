@@ -1,20 +1,11 @@
 import { Injectable } from 'graphql-modules';
-
-const users = [
-  {
-    _id: 0,
-    username: 'Sample User',
-  },
-];
+import { MutationCreateUserArgs } from '../../../graphql-codegen-types';
+import User from '../models';
 
 @Injectable()
 export class Users {
   constructor() {}
-  getUser(id: number) {
-    return users.find(({ _id }) => _id === id);
-  }
-
-  allUsers() {
-    return users;
+  async createUser(input: MutationCreateUserArgs) {
+    return await User.create(input);
   }
 }

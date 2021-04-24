@@ -49,8 +49,14 @@ export type AuthProviderInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   _?: Maybe<Scalars['String']>;
+  createUser?: Maybe<User>;
   imageUploader: Scalars['String'];
   signUp?: Maybe<AuthAndToken>;
+};
+
+
+export type MutationCreateUserArgs = {
+  input: UserInput;
 };
 
 
@@ -94,6 +100,12 @@ export type Subscription = {
 
 export type User = {
   __typename?: 'User';
+  name: Scalars['String'];
+  lastName: Scalars['String'];
+  pictureUrl?: Maybe<Scalars['String']>;
+};
+
+export type UserInput = {
   name: Scalars['String'];
   lastName: Scalars['String'];
   pictureUrl?: Maybe<Scalars['String']>;
@@ -199,6 +211,7 @@ export type ResolversTypes = ResolversObject<{
   Subscription: ResolverTypeWrapper<{}>;
   Upload: ResolverTypeWrapper<Scalars['Upload']>;
   User: ResolverTypeWrapper<User>;
+  UserInput: UserInput;
   loginInput: LoginInput;
 }>;
 
@@ -218,6 +231,7 @@ export type ResolversParentTypes = ResolversObject<{
   Subscription: {};
   Upload: Scalars['Upload'];
   User: User;
+  UserInput: UserInput;
   loginInput: LoginInput;
 }>;
 
@@ -252,6 +266,7 @@ export interface EmailScalarConfig extends GraphQLScalarTypeConfig<ResolversType
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   _?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
   imageUploader?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationImageUploaderArgs, 'file'>>;
   signUp?: Resolver<Maybe<ResolversTypes['AuthAndToken']>, ParentType, ContextType, RequireFields<MutationSignUpArgs, 'input'>>;
 }>;

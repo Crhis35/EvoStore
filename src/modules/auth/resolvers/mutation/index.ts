@@ -17,5 +17,4 @@ export async function signUp(
     throw new AppError(error.message, error.code);
   }
 }
-
 export const mutation = { signUp };
