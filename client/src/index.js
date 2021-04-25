@@ -2,6 +2,10 @@
 import { Suspense, lazy } from 'react'
 import ReactDOM from 'react-dom'
 
+// ** Apollo Imports
+import { ApolloProvider } from '@apollo/client'
+import client from './utils'
+
 // ** Redux Imports
 import { Provider } from 'react-redux'
 import { store } from './redux/storeConfig/store'
@@ -39,14 +43,16 @@ import * as serviceWorker from './serviceWorker'
 const LazyApp = lazy(() => import('./App'))
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Suspense fallback={<Spinner />}>
-      <ThemeContext>
-        <LazyApp />
-        <ToastContainer newestOnTop />
-      </ThemeContext>
-    </Suspense>
-  </Provider>,
+  <ApolloProvider client={client}>
+    <Provider store={store}>
+      <Suspense fallback={<Spinner />}>
+        <ThemeContext>
+          <LazyApp />
+          <ToastContainer newestOnTop />
+        </ThemeContext>
+      </Suspense>
+    </Provider>
+  </ApolloProvider>,
   document.getElementById('root')
 )
 
