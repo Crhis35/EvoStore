@@ -17,10 +17,12 @@ export async function createUser(
     const head = await injector.get(AuthenticatedUser);
     // if (!head.gg) return new AuthenticationError('Eroor');
     // console.log(args);
-    if (!head) return new AppError('Please get auth', '404');
+
+    if (!head || !head.verified)
+      throw new AppError('Please get verifed', '404');
     const user = await injector.get(Users).createUser(input);
 
-    await injector.get(Auth).update(head.id, user.id);
+    await injector.get(Auth).update(head.id, { userId: user.id });
 
     return user;
   } catch (error) {

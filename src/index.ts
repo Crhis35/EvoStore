@@ -27,7 +27,6 @@ app.use(express.static(join(__dirname, './images')));
 app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
 
 const schema = application.createSchemaForApollo();
-const HEADER_NAME = 'authorization';
 
 const server = new ApolloServer({
   schema,

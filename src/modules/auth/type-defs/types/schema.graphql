@@ -43,8 +43,10 @@ type AuthAndToken {
 
 extend type Query {
   login(input: loginInput!): AuthAndToken
+  me: AuthProvider
 }
 
 extend type Mutation {
   signUp(input: AuthProviderInput!): AuthAndToken
+  verified(code: Int!): AuthProvider
 }

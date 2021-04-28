@@ -6,6 +6,18 @@ import { LoginInput, MutationSignUpArgs } from '../../../graphql-codegen-types';
 import Email from '../../../service/email';
 import { AppError } from '../../../utils';
 import AuthProvider, { IAuthProvider } from '../models';
+interface AuthModel {
+  userName?: string;
+  email?: string;
+  password?: string;
+  provider?: string;
+  verifiedCode?: Number;
+  verified?: Boolean;
+  userId?: string;
+  role?: string;
+  passwordChangedAt?: number;
+  passwordResetExpires?: number;
+}
 
 @Injectable({
   global: true,
@@ -19,6 +31,9 @@ export class Auth {
     await new Email(auth, url).sendWelcome(auth.verifiedCode);
     return this.createSendToken(auth, response);
   }
+  async verified(id: string) {
+    return await this.update(id, { verified: true });
+  }
 
   private signToken(id: string) {
     return jwt.sign({ id: id }, environment.jwtSecret, {
@@ -26,8 +41,10 @@ export class Auth {
     });
   }
 
-  async update(id: string, userId: string) {
-    await AuthProvider.findByIdAndUpdate(id, { userId });
+  async update(id: string, values: AuthModel) {
+    return await AuthProvider.findByIdAndUpdate(id, values, {
+      new: true,
+    });
   }
 
   private createSendToken = (auth: IAuthProvider, res: any) => {

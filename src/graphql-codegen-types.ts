@@ -33,6 +33,8 @@ export type AuthProvider = {
   verified: Scalars['Boolean'];
   userId?: Maybe<User>;
   role: Role;
+  passwordChangedAt?: Maybe<Scalars['Date']>;
+  passwordResetExpires?: Maybe<Scalars['Date']>;
   createdAt?: Maybe<Scalars['Date']>;
   updateAt?: Maybe<Scalars['Date']>;
 };
@@ -52,6 +54,7 @@ export type Mutation = {
   createUser?: Maybe<User>;
   imageUploader: Scalars['String'];
   signUp?: Maybe<AuthAndToken>;
+  verified?: Maybe<AuthProvider>;
 };
 
 
@@ -69,6 +72,11 @@ export type MutationSignUpArgs = {
   input: AuthProviderInput;
 };
 
+
+export type MutationVerifiedArgs = {
+  code: Scalars['Int'];
+};
+
 export const enum Provider {
   Email = 'Email',
   Gmail = 'Gmail'
@@ -79,6 +87,7 @@ export type Query = {
   _?: Maybe<Scalars['String']>;
   currentUser?: Maybe<User>;
   login?: Maybe<AuthAndToken>;
+  me?: Maybe<AuthProvider>;
 };
 
 
@@ -251,6 +260,8 @@ export type AuthProviderResolvers<ContextType = any, ParentType extends Resolver
   verified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   userId?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   role?: Resolver<ResolversTypes['Role'], ParentType, ContextType>;
+  passwordChangedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  passwordResetExpires?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   updateAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -269,12 +280,14 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
   imageUploader?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationImageUploaderArgs, 'file'>>;
   signUp?: Resolver<Maybe<ResolversTypes['AuthAndToken']>, ParentType, ContextType, RequireFields<MutationSignUpArgs, 'input'>>;
+  verified?: Resolver<Maybe<ResolversTypes['AuthProvider']>, ParentType, ContextType, RequireFields<MutationVerifiedArgs, 'code'>>;
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   _?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   login?: Resolver<Maybe<ResolversTypes['AuthAndToken']>, ParentType, ContextType, RequireFields<QueryLoginArgs, 'input'>>;
+  me?: Resolver<Maybe<ResolversTypes['AuthProvider']>, ParentType, ContextType>;
 }>;
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{

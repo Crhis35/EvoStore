@@ -57,7 +57,7 @@ export const AuthModule = createModule({
           token = req.cookies.jwt;
         }
         if (!token) {
-          return new AppError(
+          throw new AppError(
             'You are not logged in! Please log in to get access',
             '401'
           );
@@ -68,7 +68,7 @@ export const AuthModule = createModule({
         //3) check if user still exits
         const currentUser = await AuthProvider.findById(decoded.id);
         if (!currentUser)
-          return new AppError(
+          throw new AppError(
             'The user belonging to this token does not exits',
             '401'
           );
