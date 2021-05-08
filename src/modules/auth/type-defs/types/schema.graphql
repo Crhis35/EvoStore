@@ -1,8 +1,3 @@
-enum Role {
-  ADMIN
-  OWNER
-  USER
-}
 enum Provider {
   Email
   Gmail
@@ -34,6 +29,7 @@ input AuthProviderInput {
   email: Email!
   password: String
   provider: Provider!
+  role: Role
 }
 
 type AuthAndToken {
@@ -43,10 +39,10 @@ type AuthAndToken {
 
 extend type Query {
   login(input: loginInput!): AuthAndToken
-  me: AuthProvider
+  me: AuthProvider @auth(requires: User)
 }
 
 extend type Mutation {
   signUp(input: AuthProviderInput!): AuthAndToken
-  verified(code: Int!): AuthProvider
+  verified(code: Int!): AuthProvider @auth(requires: User)
 }

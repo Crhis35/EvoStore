@@ -16,6 +16,7 @@ export type Scalars = {
   Upload: any;
 };
 
+
 export type AuthAndToken = {
   __typename?: 'AuthAndToken';
   token: Scalars['String'];
@@ -44,6 +45,7 @@ export type AuthProviderInput = {
   email: Scalars['Email'];
   password?: Maybe<Scalars['String']>;
   provider: Provider;
+  role?: Maybe<Role>;
 };
 
 
@@ -96,9 +98,9 @@ export type QueryLoginArgs = {
 };
 
 export const enum Role {
-  Admin = 'ADMIN',
-  Owner = 'OWNER',
-  User = 'USER'
+  Admin = 'Admin',
+  Moderator = 'Moderator',
+  User = 'User'
 };
 
 export type Subscription = {
@@ -244,6 +246,10 @@ export type ResolversParentTypes = ResolversObject<{
   loginInput: LoginInput;
 }>;
 
+export type AuthDirectiveArgs = {   requires?: Maybe<Role>; };
+
+export type AuthDirectiveResolver<Result, Parent, ContextType = any, Args = AuthDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
 export type AuthAndTokenResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthAndToken'] = ResolversParentTypes['AuthAndToken']> = ResolversObject<{
   token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   auth?: Resolver<ResolversTypes['AuthProvider'], ParentType, ContextType>;
@@ -323,3 +329,13 @@ export type Resolvers<ContextType = any> = ResolversObject<{
  * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
  */
 export type IResolvers<ContextType = any> = Resolvers<ContextType>;
+export type DirectiveResolvers<ContextType = any> = ResolversObject<{
+  auth?: AuthDirectiveResolver<any, any, ContextType>;
+}>;
+
+
+/**
+ * @deprecated
+ * Use "DirectiveResolvers" root object instead. If you wish to get "IDirectiveResolvers", add "typesPrefix: I" to your config.
+ */
+export type IDirectiveResolvers<ContextType = any> = DirectiveResolvers<ContextType>;

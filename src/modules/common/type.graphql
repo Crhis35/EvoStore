@@ -1,6 +1,15 @@
 scalar Email
 scalar Date
 scalar Upload
+
+directive @auth(requires: Role = Admin) on OBJECT | FIELD_DEFINITION
+
+enum Role {
+  Admin
+  Moderator
+  User
+}
+
 type Query {
   _: String
 }

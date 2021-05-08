@@ -2,6 +2,7 @@ import { MutationSignUpArgs } from '../../../../graphql-codegen-types';
 import { Auth } from '../../providers';
 import { AppError } from '../../../../utils';
 import { AuthenticatedUser } from '../../auth.module';
+import { isRegExp } from 'node:util';
 
 export async function login(
   obj: any,
@@ -17,12 +18,9 @@ export async function login(
 export async function me(
   obj: any,
   { input }: MutationSignUpArgs,
-  { injector }: any
+  { injector, currentUser }: any
 ) {
-  try {
-    return await injector.get(AuthenticatedUser);
-  } catch (error) {
-    throw new AppError(error.message, error.code);
-  }
+  if (!currentUser) return new AppError('Faild on load user', '401');
+  return currentUser;
 }
 export const query = { login, me };

@@ -33,6 +33,15 @@ const Routes = [
     }
   },
   {
+    path: '/verificar',
+    component: lazy(() => import('../../views/VerifiedUser')),
+    layout: 'BlankLayout',
+    meta: {
+      authRoute: true
+    }
+  },
+
+  {
     path: '/error',
     component: lazy(() => import('../../views/Error')),
     layout: 'BlankLayout'

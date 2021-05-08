@@ -12,11 +12,15 @@ import { graphqlUploadExpress } from 'graphql-upload';
 import mongoose from 'mongoose';
 import express from 'express';
 import * as http from 'http';
-import { ApolloServer, PubSub } from 'apollo-server-express';
+import {
+  ApolloServer,
+  PubSub,
+  SchemaDirectiveVisitor,
+} from 'apollo-server-express';
 import Consola from 'consola';
-import jwt from 'express-jwt';
 import { join } from 'path';
 import { application } from './application';
+import { AuthDirective } from './modules/auth/directives';
 
 export const pubsub = new PubSub();
 
@@ -27,6 +31,10 @@ app.use(express.static(join(__dirname, './images')));
 app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
 
 const schema = application.createSchemaForApollo();
+
+SchemaDirectiveVisitor.visitSchemaDirectives(schema, {
+  auth: AuthDirective,
+});
 
 const server = new ApolloServer({
   schema,

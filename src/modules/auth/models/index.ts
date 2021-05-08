@@ -51,7 +51,7 @@ const authSchema = new Schema(
     },
     role: {
       type: SchemaTypes.String,
-      enum: ['User', 'Owner', 'admin'],
+      enum: ['User', 'Moderator', 'Admin'],
       default: 'User',
     },
     passwordChangedAt: SchemaTypes.Date,

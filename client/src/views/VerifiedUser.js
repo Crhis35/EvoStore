@@ -1,5 +1,5 @@
 import { useSkin } from '@hooks/useSkin'
-import { Link, Redirect, useHistory } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { Facebook, Twitter, Mail, GitHub } from 'react-feather'
 import InputPasswordToggle from '@components/input-password-toggle'
 import { Formik } from 'formik'
@@ -21,37 +21,32 @@ import { useQuery, gql, useLazyQuery, useMutation } from '@apollo/client'
 import SpinnerComponent from '../@core/components/spinner/Fallback-spinner'
 import { toast } from 'react-toastify'
 
-const SIGN_UP = gql`
-  mutation signUp($input: AuthProviderInput!) {
-    signUp(input: $input) {
-      token
-      auth {
-        __typename
-        email
-        id
-        verifiedCode
-        userId {
-          name
-        }
-      }
+const VERIFIED_USER = gql`
+  mutation verified($code: Int!) {
+    verified(code: $code) {
+      verifiedCode
+      userName
+      email
+      verified
     }
   }
 `
 
-const SignUp = () => {
+const SignUp = ({
+  location: {
+    state: { code }
+  }
+}) => {
   const [skin, setSkin] = useSkin()
-  const history = useHistory()
-  const [signUp, { data, loading, error }] = useMutation(SIGN_UP, {
+  console.log(code)
+  const [verified, { data, loading, error }] = useMutation(VERIFIED_USER, {
     onError: (error) => {
       toast.error(error.message)
     },
     onCompleted: (data) => {
-      history.push({
-        pathname: '/verificar',
-        state: {
-          code: data.signUp.auth.verifiedCode
-        }
-      })
+      console.log(data)
+      console.log('hi')
+      // redireccionar a validar codigo
     }
   })
 
@@ -141,28 +136,18 @@ const SignUp = () => {
           sm="12"
         >
           <Col className="px-xl-2 mx-auto" sm="8" md="6" lg="12">
-            <CardTitle tag="h2" className="font-weight-bold mb-1">
-              Welcome to EvoStore! 👋
-            </CardTitle>
-            <CardText className="mb-2">
-              Please sign-in to your account and start the adventure
-            </CardText>
             <Formik
               initialValues={{
-                userName: '',
-                email: '',
-                password: ''
+                code: ''
               }}
               validationSchema={Yup.object({
-                email: Yup.string().email().required(),
-                userName: Yup.string().required(),
-                password: Yup.string().min(8).required()
+                code: Yup.number().required()
               })}
               onSubmit={async (values) => {
                 try {
-                  signUp({
+                  verified({
                     variables: {
-                      input: { ...values, provider: 'Email' }
+                      input: { ...values }
                     }
                   })
                   if (data?.data.login.verified) {
@@ -184,90 +169,26 @@ const SignUp = () => {
                 <Form className="auth-login-form mt-2" onSubmit={handleSubmit}>
                   <FormGroup>
                     <Label className="form-label" for="login-email">
-                      User name
+                      codigo
                     </Label>
                     <Input
                       type="text"
-                      id="userName"
-                      name="userName"
-                      value={values.userName}
+                      id="code"
+                      name="code"
+                      value={values.code}
                       placeholder="john35"
-                      invalid={errors.userName && touched.userName}
+                      invalid={errors.code && touched.code}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />
                   </FormGroup>
-                  <FormGroup>
-                    <Label className="form-label" for="login-email">
-                      Email
-                    </Label>
-                    <Input
-                      type="email"
-                      id="login-email"
-                      name="email"
-                      value={values.email}
-                      placeholder="john@example.com"
-                      invalid={errors.email && touched.email}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <div className="d-flex justify-content-between">
-                      <Label className="form-label" for="login-password">
-                        Password
-                      </Label>
-                      <Link to="/">
-                        <small>Forgot Password?</small>
-                      </Link>
-                    </div>
-                    <InputPasswordToggle
-                      className="input-group-merge"
-                      id="login-password"
-                      name="password"
-                      value={values.password}
-                      invalid={errors.password && touched.password}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <CustomInput
-                      type="checkbox"
-                      className="custom-control-Primary"
-                      id="remember-me"
-                      label="Remember Me"
-                    />
-                  </FormGroup>
+
                   <Button.Ripple type="submit" color="primary" block>
-                    Sign in
+                    Confirm
                   </Button.Ripple>
                 </Form>
               )}
             </Formik>
-            <p className="text-center mt-2">
-              <span className="mr-25">Already have an account?</span>
-              <Link to="/login">
-                <span>Login</span>
-              </Link>
-            </p>
-            <div className="divider my-2">
-              <div className="divider-text">or</div>
-            </div>
-            <div className="auth-footer-btn d-flex justify-content-center">
-              <Button.Ripple color="facebook">
-                <Facebook size={14} />
-              </Button.Ripple>
-              <Button.Ripple color="twitter">
-                <Twitter size={14} />
-              </Button.Ripple>
-              <Button.Ripple color="google">
-                <Mail size={14} />
-              </Button.Ripple>
-              <Button.Ripple className="mr-0" color="github">
-                <GitHub size={14} />
-              </Button.Ripple>
-            </div>
           </Col>
         </Col>
       </Row>

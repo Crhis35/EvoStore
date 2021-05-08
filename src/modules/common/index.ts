@@ -1,9 +1,9 @@
-import { createModule, gql } from 'graphql-modules';
+import { createModule } from 'graphql-modules';
 import { DateTimeResolver, EmailAddressResolver } from 'graphql-scalars';
 import { join, parse } from 'path';
 import { ensureDirectoryExistence } from '../../utils';
 import { GraphQLUpload } from 'graphql-upload';
-import { createWriteStream, existsSync, unlink } from 'fs';
+import { createWriteStream } from 'fs';
 import typeDefs from './type.graphql';
 import { MutationImageUploaderArgs } from '../../graphql-codegen-types';
 import { ApolloError } from 'apollo-server-express';
@@ -26,7 +26,7 @@ const storeUpload = async ({ stream, filename }: any) => {
   );
 };
 const processUpload = async (upload: any) => {
-  const { createReadStream, filename, mimetype } = await upload;
+  const { createReadStream, filename } = await upload;
   const stream = createReadStream();
   const file = await storeUpload({ stream, filename });
   return file;

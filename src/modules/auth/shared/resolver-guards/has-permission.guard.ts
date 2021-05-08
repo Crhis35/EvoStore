@@ -1,16 +1,13 @@
 import { ForbiddenError } from 'apollo-server-express';
+import { AppError } from '../../../../utils';
 import { AuthenticatedUser } from '../../auth.module';
 
-export const hasPermission = (permissions: string[]): any => (
+export const validateRole = (role: string) => (
+  { root, args, context, info }: any,
   next: any
-): any => async (
-  root: any,
-  args: any,
-  context: any,
-  info: any
 ): Promise<any> => {
-  if (!context.injector.get(AuthenticatedUser).hasPermission(permissions)) {
-    throw new ForbiddenError('Permissions required. ');
+  if (context.injector.get(AuthenticatedUser).role !== role) {
+    throw new AppError('Permissions required. ', '404');
   }
 
   return next(root, args, context, info);
