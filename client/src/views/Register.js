@@ -21,19 +21,11 @@ import { useQuery, gql, useLazyQuery, useMutation } from '@apollo/client'
 import SpinnerComponent from '../@core/components/spinner/Fallback-spinner'
 import { toast } from 'react-toastify'
 
-const SIGN_UP = gql`
-  mutation signUp($input: AuthProviderInput!) {
-    signUp(input: $input) {
-      token
-      auth {
-        __typename
-        email
-        id
-        verifiedCode
-        userId {
-          name
-        }
-      }
+const SAVE_USER = gql`
+  mutation createUser($input: UserInput!) {
+    createUser(input: $input) {
+      name
+      lastName
     }
   }
 `
@@ -41,16 +33,13 @@ const SIGN_UP = gql`
 const SignUp = () => {
   const [skin, setSkin] = useSkin()
   const history = useHistory()
-  const [signUp, { data, loading, error }] = useMutation(SIGN_UP, {
+  const [saveUser, { data, loading, error }] = useMutation(SAVE_USER, {
     onError: (error) => {
       toast.error(error.message)
     },
     onCompleted: (data) => {
       history.push({
-        pathname: '/verificar',
-        state: {
-          code: data.signUp.auth.verifiedCode
-        }
+        pathname: '/home',
       })
     }
   })
@@ -149,25 +138,20 @@ const SignUp = () => {
             </CardText>
             <Formik
               initialValues={{
-                userName: '',
-                email: '',
-                password: ''
+                name: '',
+                lastName: ''
               }}
               validationSchema={Yup.object({
-                email: Yup.string().email().required(),
-                userName: Yup.string().required(),
-                password: Yup.string().min(8).required()
+                name: Yup.string().required(),
+                lastName: Yup.string().required(),
               })}
-              onSubmit={async (values) => {
+              onSubmit={async (input) => {
                 try {
-                  signUp({
+                  saveUser({
                     variables: {
-                      input: { ...values, provider: 'Email' }
+                      input
                     }
                   })
-                  if (data?.data.login.verified) {
-                    toast.info('You are not verified!')
-                  }
                 } catch (error) {
                   console.log(error)
                 }
@@ -184,90 +168,40 @@ const SignUp = () => {
                 <Form className="auth-login-form mt-2" onSubmit={handleSubmit}>
                   <FormGroup>
                     <Label className="form-label" for="login-email">
-                      User name
+                      Name
                     </Label>
                     <Input
                       type="text"
                       id="userName"
-                      name="userName"
-                      value={values.userName}
+                      name="name"
+                      value={values.name}
                       placeholder="john35"
-                      invalid={errors.userName && touched.userName}
+                      invalid={errors.name && touched.name}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />
                   </FormGroup>
                   <FormGroup>
                     <Label className="form-label" for="login-email">
-                      Email
+                      Last Name
                     </Label>
                     <Input
-                      type="email"
+                      type="text"
                       id="login-email"
-                      name="email"
-                      value={values.email}
-                      placeholder="john@example.com"
-                      invalid={errors.email && touched.email}
+                      name="lastName"
+                      value={values.lastName}
+                      placeholder="Your Name"
+                      invalid={errors.lastName && touched.lastName}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <div className="d-flex justify-content-between">
-                      <Label className="form-label" for="login-password">
-                        Password
-                      </Label>
-                      <Link to="/">
-                        <small>Forgot Password?</small>
-                      </Link>
-                    </div>
-                    <InputPasswordToggle
-                      className="input-group-merge"
-                      id="login-password"
-                      name="password"
-                      value={values.password}
-                      invalid={errors.password && touched.password}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <CustomInput
-                      type="checkbox"
-                      className="custom-control-Primary"
-                      id="remember-me"
-                      label="Remember Me"
                     />
                   </FormGroup>
                   <Button.Ripple type="submit" color="primary" block>
-                    Sign in
+                    Save
                   </Button.Ripple>
                 </Form>
               )}
             </Formik>
-            <p className="text-center mt-2">
-              <span className="mr-25">Already have an account?</span>
-              <Link to="/login">
-                <span>Login</span>
-              </Link>
-            </p>
-            <div className="divider my-2">
-              <div className="divider-text">or</div>
-            </div>
-            <div className="auth-footer-btn d-flex justify-content-center">
-              <Button.Ripple color="facebook">
-                <Facebook size={14} />
-              </Button.Ripple>
-              <Button.Ripple color="twitter">
-                <Twitter size={14} />
-              </Button.Ripple>
-              <Button.Ripple color="google">
-                <Mail size={14} />
-              </Button.Ripple>
-              <Button.Ripple className="mr-0" color="github">
-                <GitHub size={14} />
-              </Button.Ripple>
-            </div>
           </Col>
         </Col>
       </Row>

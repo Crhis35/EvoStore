@@ -46,6 +46,7 @@ const SignUp = () => {
       toast.error(error.message)
     },
     onCompleted: (data) => {
+      localStorage.setItem('token', data.signUp.token)
       history.push({
         pathname: '/verificar',
         state: {

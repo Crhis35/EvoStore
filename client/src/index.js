@@ -13,7 +13,6 @@ import { store } from './redux/storeConfig/store'
 // ** Toast & ThemeColors Context
 import { ToastContainer } from 'react-toastify'
 import { ThemeContext } from './utility/context/ThemeColors'
-
 // ** Spinner (Splash Screen)
 import Spinner from './@core/components/spinner/Fallback-spinner'
 

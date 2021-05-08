@@ -1,5 +1,5 @@
 import { useSkin } from '@hooks/useSkin'
-import { Link, Redirect } from 'react-router-dom'
+import { Link, Redirect, useHistory } from 'react-router-dom'
 import { Facebook, Twitter, Mail, GitHub } from 'react-feather'
 import InputPasswordToggle from '@components/input-password-toggle'
 import { Formik } from 'formik'
@@ -31,22 +31,19 @@ const VERIFIED_USER = gql`
     }
   }
 `
-
 const SignUp = ({
   location: {
     state: { code }
   }
 }) => {
   const [skin, setSkin] = useSkin()
-  console.log(code)
+  const history = useHistory()
   const [verified, { data, loading, error }] = useMutation(VERIFIED_USER, {
     onError: (error) => {
       toast.error(error.message)
     },
     onCompleted: (data) => {
-      console.log(data)
-      console.log('hi')
-      // redireccionar a validar codigo
+      history.push(`/register`)
     }
   })
 
@@ -144,10 +141,13 @@ const SignUp = ({
                 code: Yup.number().required()
               })}
               onSubmit={async (values) => {
+                if (values.code === code) {
+                  console.log('OKIIIII VIVA URIBE')
+                }
                 try {
                   verified({
                     variables: {
-                      input: { ...values }
+                      code: values.code
                     }
                   })
                   if (data?.data.login.verified) {
@@ -172,11 +172,11 @@ const SignUp = ({
                       codigo
                     </Label>
                     <Input
-                      type="text"
+                      type="number"
                       id="code"
                       name="code"
                       value={values.code}
-                      placeholder="john35"
+                      placeholder="Insert your code"
                       invalid={errors.code && touched.code}
                       onChange={handleChange}
                       onBlur={handleBlur}
