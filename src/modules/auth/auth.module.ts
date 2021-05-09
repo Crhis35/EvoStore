@@ -13,7 +13,8 @@ import { resolvers } from './resolvers';
 import { Auth } from './providers';
 import { AppError } from '../../utils';
 import { environment } from '../../environment';
-import AuthProvider from './models';
+import AuthProvider, { IAuthProvider } from './models';
+import { User } from '../../graphql-codegen-types';
 
 interface AuthenticatedUser {
   _id: number;
@@ -43,7 +44,9 @@ export const AuthModule = createModule({
       scope: Scope.Operation,
       deps: [CONTEXT],
       global: true,
-      useFactory: async (ctx: GraphQLModules.GlobalContext) => {
+      useFactory: async (
+        ctx: GraphQLModules.GlobalContext
+      ): Promise<IAuthProvider> => {
         const req = ctx.request;
         const res = ctx.response;
         //1) Getting token and check if it's there

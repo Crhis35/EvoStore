@@ -2,13 +2,14 @@ scalar Email
 scalar Date
 scalar Upload
 
-directive @auth(requires: Role = Admin) on OBJECT | FIELD_DEFINITION
-
 enum Role {
   Admin
   Moderator
   User
 }
+
+directive @auth on FIELD_DEFINITION
+directive @hasRole(roles: [Role!]) on FIELD_DEFINITION | FIELD
 
 type Query {
   _: String
@@ -16,6 +17,8 @@ type Query {
 type Mutation {
   _: String
   imageUploader(file: Upload!): String!
+    @auth
+    @hasRole(roles: [Moderator, Admin])
 }
 type Subscription {
   _: String

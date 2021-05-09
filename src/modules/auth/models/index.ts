@@ -49,11 +49,13 @@ const authSchema = new Schema(
       type: SchemaTypes.ObjectId,
       ref: 'User',
     },
-    role: {
-      type: SchemaTypes.String,
-      enum: ['User', 'Moderator', 'Admin'],
-      default: 'User',
-    },
+    role: [
+      {
+        type: SchemaTypes.String,
+        enum: ['User', 'Moderator', 'Admin'],
+        default: 'User',
+      },
+    ],
     passwordChangedAt: SchemaTypes.Date,
     passwordResetExpires: SchemaTypes.Date,
   },

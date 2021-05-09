@@ -17,6 +17,7 @@ export type Scalars = {
 };
 
 
+
 export type AuthAndToken = {
   __typename?: 'AuthAndToken';
   token: Scalars['String'];
@@ -33,7 +34,7 @@ export type AuthProvider = {
   verifiedCode?: Maybe<Scalars['Int']>;
   verified: Scalars['Boolean'];
   userId?: Maybe<User>;
-  role: Role;
+  role: Array<Maybe<Role>>;
   passwordChangedAt?: Maybe<Scalars['Date']>;
   passwordResetExpires?: Maybe<Scalars['Date']>;
   createdAt?: Maybe<Scalars['Date']>;
@@ -45,7 +46,7 @@ export type AuthProviderInput = {
   email: Scalars['Email'];
   password?: Maybe<Scalars['String']>;
   provider: Provider;
-  role?: Maybe<Role>;
+  role?: Maybe<Array<Maybe<Role>>>;
 };
 
 
@@ -246,9 +247,13 @@ export type ResolversParentTypes = ResolversObject<{
   loginInput: LoginInput;
 }>;
 
-export type AuthDirectiveArgs = {   requires?: Maybe<Role>; };
+export type AuthDirectiveArgs = {  };
 
 export type AuthDirectiveResolver<Result, Parent, ContextType = any, Args = AuthDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type HasRoleDirectiveArgs = {   roles?: Maybe<Array<Role>>; };
+
+export type HasRoleDirectiveResolver<Result, Parent, ContextType = any, Args = HasRoleDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type AuthAndTokenResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthAndToken'] = ResolversParentTypes['AuthAndToken']> = ResolversObject<{
   token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -265,7 +270,7 @@ export type AuthProviderResolvers<ContextType = any, ParentType extends Resolver
   verifiedCode?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   verified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   userId?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  role?: Resolver<ResolversTypes['Role'], ParentType, ContextType>;
+  role?: Resolver<Array<Maybe<ResolversTypes['Role']>>, ParentType, ContextType>;
   passwordChangedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   passwordResetExpires?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
@@ -331,6 +336,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
 export type IResolvers<ContextType = any> = Resolvers<ContextType>;
 export type DirectiveResolvers<ContextType = any> = ResolversObject<{
   auth?: AuthDirectiveResolver<any, any, ContextType>;
+  hasRole?: HasRoleDirectiveResolver<any, any, ContextType>;
 }>;
 
 
