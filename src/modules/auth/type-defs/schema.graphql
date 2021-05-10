@@ -39,7 +39,7 @@ type AuthAndToken {
 
 extend type Query {
   login(input: loginInput!): AuthAndToken
-  me: AuthProvider @auth
+  me: AuthProvider @auth @hasRole(roles: [Admin])
 }
 
 extend type Mutation {

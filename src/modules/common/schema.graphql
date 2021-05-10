@@ -6,6 +6,17 @@ enum Role {
   Admin
   Moderator
   User
+  Owner
+}
+
+enum Order {
+  ASC
+  DESC
+}
+
+input SortBy {
+  field: String!
+  order: Order!
 }
 
 directive @auth on FIELD_DEFINITION

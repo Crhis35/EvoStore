@@ -1,20 +1,14 @@
-import {
-  createModule,
-  gql,
-  InjectionToken,
-  Scope,
-  CONTEXT,
-} from 'graphql-modules';
-import jwt from 'jsonwebtoken';
-import { promisify } from 'util';
+import 'graphql-import-node';
 
-import { typeDefs } from './type-defs';
+import { createModule, InjectionToken, Scope, CONTEXT } from 'graphql-modules';
+import jwt from 'jsonwebtoken';
+
+import typeDefs from './type-defs/schema.graphql';
 import { resolvers } from './resolvers';
 import { Auth } from './providers';
 import { AppError } from '../../utils';
 import { environment } from '../../environment';
 import AuthProvider, { IAuthProvider } from './models';
-import { User } from '../../graphql-codegen-types';
 
 interface AuthenticatedUser {
   _id: number;
@@ -24,8 +18,6 @@ export const AuthenticatedUser = new InjectionToken<AuthenticatedUser>(
   'authenticated-user'
 );
 
-const signToken = (id: string) =>
-  jwt.sign({ id }, 'keys.jwtSecret', { expiresIn: '1d' });
 export interface IVerifiedUserType {
   id: number;
   iat: number;

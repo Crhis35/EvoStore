@@ -16,8 +16,6 @@ export async function createUser(
 ) {
   try {
     const head: IAuthProvider = await injector.get(AuthenticatedUser);
-    // if (!head.gg) return new AuthenticationError('Eroor');
-    // console.log(args);
 
     if (!head || !head.verified)
       throw new AppError('Please get verifed', '404');

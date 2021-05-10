@@ -1,0 +1,37 @@
+type Review {
+  review: String!
+  rating: Float!
+  product: Product!
+  user: User!
+  createdAt: Date
+  updateAt: Date
+}
+
+type ReviewPaginator {
+  items: [Review]!
+  currentPage: Int!
+  totalPages: Int!
+}
+
+extend type Query {
+  listReviwsProduct(
+    id: ID!
+    page: Int
+    limit: Int
+    sort: SortBy
+  ): ReviewPaginator
+}
+
+input ReviewInput {
+  review: String!
+  rating: Float!
+  product: Product!
+}
+
+extend type Mutation {
+  createReview(input: ReviewInput!): Review @auth @hasRole(roles: [User])
+  updateReview(id: ID!, input: ReviewInput!): Review
+    @auth
+    @hasRole(roles: [User])
+  deleteReview(id: ID!): Review @auth @hasRole(roles: [User])
+}

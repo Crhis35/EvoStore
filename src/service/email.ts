@@ -1,7 +1,7 @@
 import { IAuthProvider } from '../modules/auth/models';
 
 import nodemailer from 'nodemailer';
-import { htmlToText } from 'html-to-text';
+import { fromString, htmlToText } from 'html-to-text';
 import pug from 'pug';
 import { environment } from '../environment';
 
@@ -63,6 +63,7 @@ export default class Email implements IEmail {
       to: this.to,
       subject: options.subject,
       attachments: options.attachments,
+      html,
       text: htmlToText(html),
     };
 
