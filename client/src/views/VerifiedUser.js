@@ -169,7 +169,7 @@ const SignUp = ({
                 <Form className="auth-login-form mt-2" onSubmit={handleSubmit}>
                   <FormGroup>
                     <Label className="form-label" for="login-email">
-                      codigo
+                      Confirmation Code
                     </Label>
                     <Input
                       type="number"

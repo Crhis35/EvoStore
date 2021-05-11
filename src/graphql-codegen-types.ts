@@ -60,7 +60,7 @@ export type Mutation = {
   deleteReview?: Maybe<Review>;
   imageUploader: Scalars['String'];
   signUp?: Maybe<AuthAndToken>;
-  updateItem?: Maybe<Product>;
+  updateProduct?: Maybe<Product>;
   updateReview?: Maybe<Review>;
   verified?: Maybe<AuthProvider>;
 };
@@ -96,7 +96,7 @@ export type MutationSignUpArgs = {
 };
 
 
-export type MutationUpdateItemArgs = {
+export type MutationUpdateProductArgs = {
   id: Scalars['ID'];
   input: ProductInput;
 };
@@ -118,7 +118,6 @@ export const enum Order {
 };
 
 export type Price = {
-  __typename?: 'Price';
   name: Scalars['String'];
   price: Scalars['Float'];
 };
@@ -131,6 +130,8 @@ export type Product = {
   listPrice: Array<Price>;
   defaultPrice: Scalars['Int'];
   price: Scalars['Float'];
+  ratingsQuantity: Scalars['Int'];
+  ratingsAverage: Scalars['Float'];
   images?: Maybe<Array<Maybe<Scalars['String']>>>;
   quantity: Scalars['Int'];
   stock: Scalars['Boolean'];
@@ -143,7 +144,7 @@ export type Product = {
 export type ProductInput = {
   name: Scalars['String'];
   description: Scalars['String'];
-  listPrice: Array<Maybe<Price>>;
+  listPrice: Array<Price>;
   price: Scalars['Float'];
   defaultPrice: Scalars['Int'];
   images?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -169,7 +170,7 @@ export type Query = {
   _?: Maybe<Scalars['String']>;
   currentUser?: Maybe<User>;
   getProduct?: Maybe<Product>;
-  listProduct?: Maybe<ProductPaginator>;
+  listProducts?: Maybe<ProductPaginator>;
   listReviwsProduct?: Maybe<ReviewPaginator>;
   login?: Maybe<AuthAndToken>;
   me?: Maybe<AuthProvider>;
@@ -181,7 +182,7 @@ export type QueryGetProductArgs = {
 };
 
 
-export type QueryListProductArgs = {
+export type QueryListProductsArgs = {
   search?: Maybe<Scalars['String']>;
   page?: Maybe<Scalars['Int']>;
   limit?: Maybe<Scalars['Int']>;
@@ -204,6 +205,7 @@ export type QueryLoginArgs = {
 
 export type Review = {
   __typename?: 'Review';
+  id: Scalars['ID'];
   review: Scalars['String'];
   rating: Scalars['Float'];
   product: Product;
@@ -351,7 +353,7 @@ export type ResolversTypes = ResolversObject<{
   Email: ResolverTypeWrapper<Scalars['Email']>;
   Mutation: ResolverTypeWrapper<{}>;
   Order: Order;
-  Price: ResolverTypeWrapper<Price>;
+  Price: Price;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   Product: ResolverTypeWrapper<Product>;
   ProductInput: ProductInput;
@@ -446,15 +448,9 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteReview?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType, RequireFields<MutationDeleteReviewArgs, 'id'>>;
   imageUploader?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationImageUploaderArgs, 'file'>>;
   signUp?: Resolver<Maybe<ResolversTypes['AuthAndToken']>, ParentType, ContextType, RequireFields<MutationSignUpArgs, 'input'>>;
-  updateItem?: Resolver<Maybe<ResolversTypes['Product']>, ParentType, ContextType, RequireFields<MutationUpdateItemArgs, 'id' | 'input'>>;
+  updateProduct?: Resolver<Maybe<ResolversTypes['Product']>, ParentType, ContextType, RequireFields<MutationUpdateProductArgs, 'id' | 'input'>>;
   updateReview?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType, RequireFields<MutationUpdateReviewArgs, 'id' | 'input'>>;
   verified?: Resolver<Maybe<ResolversTypes['AuthProvider']>, ParentType, ContextType, RequireFields<MutationVerifiedArgs, 'code'>>;
-}>;
-
-export type PriceResolvers<ContextType = any, ParentType extends ResolversParentTypes['Price'] = ResolversParentTypes['Price']> = ResolversObject<{
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  price?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type ProductResolvers<ContextType = any, ParentType extends ResolversParentTypes['Product'] = ResolversParentTypes['Product']> = ResolversObject<{
@@ -464,6 +460,8 @@ export type ProductResolvers<ContextType = any, ParentType extends ResolversPare
   listPrice?: Resolver<Array<ResolversTypes['Price']>, ParentType, ContextType>;
   defaultPrice?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   price?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  ratingsQuantity?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  ratingsAverage?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   images?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   quantity?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   stock?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -485,13 +483,14 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   _?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   getProduct?: Resolver<Maybe<ResolversTypes['Product']>, ParentType, ContextType, RequireFields<QueryGetProductArgs, 'id'>>;
-  listProduct?: Resolver<Maybe<ResolversTypes['ProductPaginator']>, ParentType, ContextType, RequireFields<QueryListProductArgs, never>>;
+  listProducts?: Resolver<Maybe<ResolversTypes['ProductPaginator']>, ParentType, ContextType, RequireFields<QueryListProductsArgs, never>>;
   listReviwsProduct?: Resolver<Maybe<ResolversTypes['ReviewPaginator']>, ParentType, ContextType, RequireFields<QueryListReviwsProductArgs, 'id'>>;
   login?: Resolver<Maybe<ResolversTypes['AuthAndToken']>, ParentType, ContextType, RequireFields<QueryLoginArgs, 'input'>>;
   me?: Resolver<Maybe<ResolversTypes['AuthProvider']>, ParentType, ContextType>;
 }>;
 
 export type ReviewResolvers<ContextType = any, ParentType extends ResolversParentTypes['Review'] = ResolversParentTypes['Review']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   review?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   rating?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   product?: Resolver<ResolversTypes['Product'], ParentType, ContextType>;
@@ -529,7 +528,6 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Date?: GraphQLScalarType;
   Email?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
-  Price?: PriceResolvers<ContextType>;
   Product?: ProductResolvers<ContextType>;
   ProductPaginator?: ProductPaginatorResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

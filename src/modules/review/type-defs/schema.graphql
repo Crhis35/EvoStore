@@ -1,4 +1,5 @@
 type Review {
+  id: ID!
   review: String!
   rating: Float!
   product: Product!
@@ -25,7 +26,7 @@ extend type Query {
 input ReviewInput {
   review: String!
   rating: Float!
-  product: Product!
+  product: ID!
 }
 
 extend type Mutation {

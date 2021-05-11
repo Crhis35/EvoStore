@@ -8,15 +8,12 @@ import { AuthenticatedUser } from '../../auth.module';
 
 export async function signUp(
   obj: any,
-  { input }: MutationSignUpArgs,
-  { injector, request, response }: any
+  args: MutationSignUpArgs,
+  { injector, request, response }: GraphQLModules.Context
 ) {
   try {
-    // const head = await injector.get(AuthenticatedUser);
-    // if (!head.gg) return new AuthenticationError('Eroor');
-    // console.log(args);
-
-    return await injector.get(Auth).signUp(input, request, response);
+    console.log(args);
+    return await injector.get(Auth).signUp(args, request, response);
   } catch (error) {
     throw new AppError(error.message, error.code);
   }

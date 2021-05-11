@@ -23,7 +23,7 @@ interface AuthModel {
   global: true,
 })
 export class Auth {
-  async signUp(input: MutationSignUpArgs, request: any, response: any) {
+  async signUp({ input }: MutationSignUpArgs, request: any, response: any) {
     const auth = await AuthProvider.create(input);
 
     const url = `${request.protocol}://${request.get('host')}`;

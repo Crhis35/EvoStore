@@ -1,8 +1,6 @@
 import { MutationSignUpArgs } from '../../../../graphql-codegen-types';
 import { Auth } from '../../providers';
 import { AppError } from '../../../../utils';
-import { AuthenticatedUser } from '../../auth.module';
-import { isRegExp } from 'node:util';
 
 export async function login(
   obj: any,

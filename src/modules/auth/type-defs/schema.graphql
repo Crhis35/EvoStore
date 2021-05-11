@@ -44,5 +44,5 @@ extend type Query {
 
 extend type Mutation {
   signUp(input: AuthProviderInput!): AuthAndToken
-  verified(code: Int!): AuthProvider @auth @hasRole(roles: [User])
+  verified(code: Int!): AuthProvider @auth
 }

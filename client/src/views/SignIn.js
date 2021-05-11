@@ -41,14 +41,14 @@ const SIGN_UP = gql`
 const SignUp = () => {
   const [skin, setSkin] = useSkin()
   const history = useHistory()
-  const [signUp, { data, loading, error }] = useMutation(SIGN_UP, {
+  const [signUp, { data, loading }] = useMutation(SIGN_UP, {
     onError: (error) => {
       toast.error(error.message)
     },
     onCompleted: (data) => {
       localStorage.setItem('token', data.signUp.token)
       history.push({
-        pathname: '/verificar',
+        pathname: '/verified',
         state: {
           code: data.signUp.auth.verifiedCode
         }

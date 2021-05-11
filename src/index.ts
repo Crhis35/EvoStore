@@ -8,29 +8,57 @@ declare global {
   }
 }
 import 'reflect-metadata';
-import { environment } from './environment';
-import { graphqlUploadExpress } from 'graphql-upload';
+import { join } from 'path';
+
 import mongoose from 'mongoose';
 import express from 'express';
 import * as http from 'http';
+
+import helmet from 'helmet';
+import mongoSanitize from 'express-mongo-sanitize';
+import xss from 'x-xss-protection';
+import cookieParser from 'cookie-parser';
+import compression from 'compression';
+import rateLimit from 'express-rate-limit';
+
 import {
   ApolloServer,
   PubSub,
   SchemaDirectiveVisitor,
 } from 'apollo-server-express';
-import Consola from 'consola';
-import { join } from 'path';
+import { graphqlUploadExpress } from 'graphql-upload';
+
 import { application } from './application';
 import { AuthDirective, HasRoleDirective } from './modules/auth/directives';
 import { IAuthProvider } from './modules/auth/models';
+import { environment } from './environment';
+
+import Consola from 'consola';
 
 export const pubsub = new PubSub();
 
 const app = express();
 app.disable('x-powered-by');
 app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+
+//Set secure http headers
+app.use(
+  helmet({
+    contentSecurityPolicy: environment.env === 'production' ? undefined : false,
+  })
+);
+
+app.use(cookieParser()); //Limit request from api
+
+// Data sanatization against NoSQL query injection
+app.use(mongoSanitize());
+
+// Data sanatization against XSS
+app.use(xss());
 app.use(express.static(join(__dirname, './images')));
 app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
+app.use(compression());
 
 const schema = application.createSchemaForApollo();
 

@@ -5,7 +5,7 @@ import { createModule } from 'graphql-modules';
 import typeDefs from './type-defs/schema.graphql';
 
 export const ReviewModule = createModule({
-  id: 'product',
+  id: 'review',
   dirname: __dirname,
   typeDefs,
 });

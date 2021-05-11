@@ -1,7 +1,7 @@
 import { lazy } from 'react'
 
 // ** Document title
-const TemplateTitle = '%s - Vuexy React Admin Template'
+const TemplateTitle = '%s - EvoStore'
 
 // ** Default Route
 const DefaultRoute = '/login'
@@ -33,7 +33,7 @@ const Routes = [
     }
   },
   {
-    path: '/verificar',
+    path: '/verified',
     component: lazy(() => import('../../views/VerifiedUser')),
     layout: 'BlankLayout',
     meta: {
