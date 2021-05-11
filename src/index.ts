@@ -3,6 +3,7 @@ declare global {
     interface GlobalContext {
       request: any;
       response: any;
+      currentUser: IAuthProvider;
     }
   }
 }
@@ -20,7 +21,8 @@ import {
 import Consola from 'consola';
 import { join } from 'path';
 import { application } from './application';
-import { AuthDirective } from './modules/auth/directives';
+import { AuthDirective, HasRoleDirective } from './modules/auth/directives';
+import { IAuthProvider } from './modules/auth/models';
 
 export const pubsub = new PubSub();
 
@@ -34,6 +36,7 @@ const schema = application.createSchemaForApollo();
 
 SchemaDirectiveVisitor.visitSchemaDirectives(schema, {
   auth: AuthDirective,
+  hasRole: HasRoleDirective,
 });
 
 const server = new ApolloServer({

@@ -4,7 +4,7 @@ import { join, parse } from 'path';
 import { ensureDirectoryExistence } from '../../utils';
 import { GraphQLUpload } from 'graphql-upload';
 import { createWriteStream } from 'fs';
-import typeDefs from './type.graphql';
+import typeDefs from './schema.graphql';
 import { MutationImageUploaderArgs } from '../../graphql-codegen-types';
 import { ApolloError } from 'apollo-server-express';
 

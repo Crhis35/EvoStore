@@ -1,19 +1,14 @@
-import {
-  createModule,
-  gql,
-  InjectionToken,
-  Scope,
-  CONTEXT,
-} from 'graphql-modules';
-import jwt from 'jsonwebtoken';
-import { promisify } from 'util';
+import 'graphql-import-node';
 
-import { typeDefs } from './type-defs';
+import { createModule, InjectionToken, Scope, CONTEXT } from 'graphql-modules';
+import jwt from 'jsonwebtoken';
+
+import typeDefs from './type-defs/schema.graphql';
 import { resolvers } from './resolvers';
 import { Auth } from './providers';
 import { AppError } from '../../utils';
 import { environment } from '../../environment';
-import AuthProvider from './models';
+import AuthProvider, { IAuthProvider } from './models';
 
 interface AuthenticatedUser {
   _id: number;
@@ -23,8 +18,6 @@ export const AuthenticatedUser = new InjectionToken<AuthenticatedUser>(
   'authenticated-user'
 );
 
-const signToken = (id: string) =>
-  jwt.sign({ id }, 'keys.jwtSecret', { expiresIn: '1d' });
 export interface IVerifiedUserType {
   id: number;
   iat: number;
@@ -43,7 +36,9 @@ export const AuthModule = createModule({
       scope: Scope.Operation,
       deps: [CONTEXT],
       global: true,
-      useFactory: async (ctx: GraphQLModules.GlobalContext) => {
+      useFactory: async (
+        ctx: GraphQLModules.GlobalContext
+      ): Promise<IAuthProvider> => {
         const req = ctx.request;
         const res = ctx.response;
         //1) Getting token and check if it's there

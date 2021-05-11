@@ -1,0 +1,36 @@
+scalar Email
+scalar Date
+scalar Upload
+
+enum Role {
+  Admin
+  Moderator
+  User
+  Owner
+}
+
+enum Order {
+  ASC
+  DESC
+}
+
+input SortBy {
+  field: String!
+  order: Order!
+}
+
+directive @auth on FIELD_DEFINITION
+directive @hasRole(roles: [Role!]) on FIELD_DEFINITION | FIELD
+
+type Query {
+  _: String
+}
+type Mutation {
+  _: String
+  imageUploader(file: Upload!): String!
+    @auth
+    @hasRole(roles: [Moderator, Admin])
+}
+type Subscription {
+  _: String
+}
