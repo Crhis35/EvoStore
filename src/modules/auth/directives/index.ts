@@ -7,7 +7,7 @@ import {
 } from 'graphql';
 import { AppError } from '../../../utils';
 import { environment } from '../../../environment';
-import AuthProvider, { IAuthProvider } from '../models';
+import AuthProvider from '../models';
 import jwt from 'jsonwebtoken';
 
 const ensureAuthenticated = async (ctx: GraphQLModules.GlobalContext) => {

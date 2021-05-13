@@ -12,7 +12,6 @@ export async function signUp(
   { injector, request, response }: GraphQLModules.Context
 ) {
   try {
-    console.log(args);
     return await injector.get(Auth).signUp(args, request, response);
   } catch (error) {
     throw new AppError(error.message, error.code);
@@ -25,8 +24,6 @@ export async function verified(
 ) {
   try {
     const currUser = await injector.get(AuthenticatedUser);
-    // if (!head.gg) return new AuthenticationError('Eroor');
-    // console.log(args);
     if (currUser.verifiedCode !== code)
       throw new AppError('Invalid code provided', '401');
     if (currUser.verified)

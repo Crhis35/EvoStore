@@ -1,7 +1,7 @@
 import { IAuthProvider } from '../modules/auth/models';
 
 import nodemailer from 'nodemailer';
-import { fromString, htmlToText } from 'html-to-text';
+import { htmlToText } from 'html-to-text';
 import pug from 'pug';
 import { environment } from '../environment';
 
