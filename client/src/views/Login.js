@@ -32,13 +32,54 @@ const LOGIN = gql`
     }
   }
 `
+const produt = gql`
+  query listProducts(
+    $search: String
+    $page: Int
+    $limit: Int
+    $sort: SortBy
+    $filter: String
+  ) {
+    listProducts(
+      search: $search
+      page: $page
+      limit: $limit
+      sort: $sort
+      filter: $filter
+    ) {
+      items {
+        name
+        listPrice {
+          name
+          price
+        }
+        price
+        description
+        defaultPrice
+        quantity
+        ratingsAverage
+        ratingsQuantity
+        stock
+        brand
+      }
+      currentPage
+      totalPages
+    }
+  }
+`
 
 const Login = () => {
   const [skin, setSkin] = useSkin()
   const [login, { data, loading, error }] = useLazyQuery(LOGIN)
+  const { data: daata2, loading: loadin2 } = useQuery(produt, {
+    variables: {
+      search: 'Ego'
+    }
+  })
   const illustration = skin === 'dark' ? 'login-v2-dark.svg' : 'login-v2.svg',
     source = require(`@src/assets/images/pages/${illustration}`).default
   if (loading) return <SpinnerComponent />
+  if (loadin2) return <SpinnerComponent />
   if (error) toast.error(error.message)
   return (
     <div className="auth-wrapper auth-v2">

@@ -53,7 +53,7 @@ const authSchema = new Schema(
       {
         type: SchemaTypes.String,
         enum: ['User', 'Moderator', 'Admin'],
-        default: 'User',
+        default: ['User'],
       },
     ],
     passwordChangedAt: SchemaTypes.Date,

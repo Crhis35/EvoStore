@@ -56,9 +56,9 @@ app.use(mongoSanitize());
 
 // Data sanatization against XSS
 app.use(xss());
+app.use(compression());
 app.use(express.static(join(__dirname, './images')));
 app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
-app.use(compression());
 
 const schema = application.createSchemaForApollo();
 

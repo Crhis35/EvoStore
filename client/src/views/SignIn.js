@@ -26,7 +26,6 @@ const SIGN_UP = gql`
     signUp(input: $input) {
       token
       auth {
-        __typename
         email
         id
         verifiedCode
